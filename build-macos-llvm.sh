@@ -16,7 +16,7 @@ cd $LLVM_PROJ_DIR
 git apply update-DistributionExample.cmake.patch
 
 mkdir build && cd build
-cmake -G Ninja -C ../clang/cmake/caches/DistributionExample.cmake ../llvm
+cmake -G Ninja -C ../clang/cmake/caches/DistributionExample.cmake -DLLVM_USE_STATIC_ZSTD=ON ../llvm
 ninja stage2-distribution
 
 cd tools/clang/stage2-bins
