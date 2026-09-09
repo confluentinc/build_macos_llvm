@@ -5,15 +5,31 @@ index 99d5dc0fd2fe..2176d4e74db4 100644
 @@ -1,8 +1,8 @@
  # This file sets up a CMakeCache for the second stage of a simple distribution
  # bootstrap build.
- 
+
 -set(LLVM_ENABLE_PROJECTS "clang;clang-tools-extra;lld" CACHE STRING "")
 -set(LLVM_ENABLE_RUNTIMES "compiler-rt;libcxx;libcxxabi" CACHE STRING "")
 +set(LLVM_ENABLE_PROJECTS "clang;clang-tools-extra;lld;clang-tidy" CACHE STRING "")
 +set(LLVM_ENABLE_RUNTIMES "compiler-rt;libunwind;libcxx;libcxxabi" CACHE STRING "")
- 
+
  set(LLVM_TARGETS_TO_BUILD X86;ARM;AArch64 CACHE STRING "")
- 
-@@ -20,6 +20,11 @@ set(LLVM_TOOLCHAIN_TOOLS
+
+@@ -10,6 +10,15 @@ set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "")
+ set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O3 -gline-tables-only -DNDEBUG" CACHE STRING "")
+ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O3 -gline-tables-only -DNDEBUG" CACHE STRING "")
+
++# Statically link zstd instead of Homebrew's shared libzstd.1.dylib -- this is
++# a stage2 setting because stage2 (not stage1) is what actually gets packaged
++# (see build-macos-llvm.sh's `cd tools/clang/stage2-bins`); a command-line
++# -DLLVM_USE_STATIC_ZSTD=ON on the outer cmake invocation only configures
++# stage1's throwaway bootstrap compiler and is never forwarded into stage2's
++# build (CLANG_BOOTSTRAP_CMAKE_ARGS only passes -C DistributionExample-stage2.cmake,
++# not arbitrary -D flags).
++set(LLVM_USE_STATIC_ZSTD ON CACHE BOOL "")
++
+ # setup toolchain
+ set(LLVM_INSTALL_TOOLCHAIN_ONLY ON CACHE BOOL "")
+ set(LLVM_TOOLCHAIN_TOOLS
+@@ -20,6 +29,11 @@ set(LLVM_TOOLCHAIN_TOOLS
    llvm-objdump
    llvm-nm
    llvm-size
