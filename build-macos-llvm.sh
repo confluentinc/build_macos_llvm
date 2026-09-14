@@ -43,5 +43,10 @@ ln -s llvm-ar llvm-ranlib
 
 popd
 
-XZ_OPT="-9e -T0" tar -cJf ${OUTPUT_PATH} bin include lib
+# NOTE: -J (bsdtar's XZ flag) was used here previously despite the .tar.zst
+# name and XZ_OPT env var -- it silently produced XZ-compressed data, not
+# zstd, which Bazel's native zstd extractor can't read ("Unknown frame
+# descriptor"). --zstd is bsdtar's actual zstd compressor; its options are
+# passed via --options, not XZ_OPT (which only xz reads).
+tar --zstd --options zstd:compression-level=19,zstd:threads=0 -cf ${OUTPUT_PATH} bin include lib
 

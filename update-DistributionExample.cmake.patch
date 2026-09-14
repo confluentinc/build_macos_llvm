@@ -29,7 +29,7 @@ index 99d5dc0fd2fe..2176d4e74db4 100644
  # setup toolchain
  set(LLVM_INSTALL_TOOLCHAIN_ONLY ON CACHE BOOL "")
  set(LLVM_TOOLCHAIN_TOOLS
-@@ -20,6 +29,11 @@ set(LLVM_TOOLCHAIN_TOOLS
+@@ -20,6 +29,12 @@ set(LLVM_TOOLCHAIN_TOOLS
    llvm-objdump
    llvm-nm
    llvm-size
@@ -38,6 +38,7 @@ index 99d5dc0fd2fe..2176d4e74db4 100644
 +  llvm-objcopy
 +  llvm-strip
 +  clang-format
++  clangd
    CACHE STRING "")
  
  set(LLVM_DISTRIBUTION_COMPONENTS
