@@ -43,5 +43,14 @@ ln -s llvm-ar llvm-ranlib
 
 popd
 
-XZ_OPT="-9e -T0" tar -cJf ${OUTPUT_PATH} bin include lib
+# NOTE: -J (bsdtar's XZ flag) was used here previously despite the .tar.zst
+# name and XZ_OPT env var -- it silently produced XZ-compressed data, not
+# zstd, which Bazel's native zstd extractor can't read ("Unknown frame
+# descriptor"). --zstd is bsdtar's actual zstd compressor; its options are
+# passed via --options, not XZ_OPT (which only xz reads). threads=0 would
+# match libzstd's own ZSTD_c_nbWorkers=0, which means single-threaded, not
+# "use all cores" -- pass the actual core count to get the parallelism the
+# old XZ_OPT="-T0" had.
+NPROC=$(sysctl -n hw.ncpu)
+tar --zstd --options zstd:compression-level=19,zstd:threads=${NPROC} -cf ${OUTPUT_PATH} bin include lib
 
