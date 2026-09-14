@@ -21,7 +21,7 @@ brew install bzip2 cmake coreutils git lz4 make ninja xz zlib zstd
 The build process can be invoked via the [build-macos-llvm.sh](./build-macos-llvm.sh) file as follows:
 
 ```console
-./build-macos-llvm.sh 17.0.6 ~/clang-17.0.6-x86_64-apple-darwin.tar.xz
+./build-macos-llvm.sh 17.0.6 ~/clang-17.0.6-x86_64-apple-darwin.tar.zst
 ```
 
 Where the first arg is the version, and the second arg is the output path.
